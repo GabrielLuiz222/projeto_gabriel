@@ -40,5 +40,16 @@ class MyHomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   List<Custo> transactions = [];
-}
+
+ double get total {
+    double total = 0;
+
+    for (var custo in transactions) {
+      total += custo.valor;
+    }
+    return total;
+  }
+
+
+
 
