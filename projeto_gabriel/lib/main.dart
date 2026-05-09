@@ -29,3 +29,16 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+} 
+
+class _HomePageState extends State<HomePage> {
+
+  List<Custo> transactions = [];
+}
+
