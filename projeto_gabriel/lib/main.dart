@@ -50,6 +50,8 @@ class _HomePageState extends State<HomePage> {
     return total;
   }
 
-
-
-
+  void addTransaction(Custo custo) { 
+    setState(() { 
+      transactions.add(custo); });
+  }
+  }
