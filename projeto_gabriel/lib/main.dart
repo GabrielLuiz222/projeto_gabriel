@@ -54,6 +54,7 @@ class _HomePageState extends State<HomePage> {
     setState(() { 
       transactions.add(custo); });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,6 +101,42 @@ class _HomePageState extends State<HomePage> {
             ),
 
             const SizedBox(height: 20),
+
+            Expanded(
+              child: transactions.isEmpty
+                  ? const Center(
+                      child: Text(
+                        "Nenhum gasto cadastrado",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: transactions.length,
+                      itemBuilder: (context, index) {
+
+                        final transaction =
+                            transactions[index];
+
+                        return Card(
+                          child: ListTile(
+                            leading: const Icon(
+                              Icons.attach_money,
+                              color: Colors.green,
+                            ),
+
+                            title:
+                                Text(transaction.title),
+
+                            trailing: Text(
+                              "R\$ ${transaction.value.toStringAsFixed(2)}",
+                            ),
+                          ),
+                        );
+                      }
+                    )
+            )
           ]
-        )));
-      }}
+        )
+      )
+    );
+  }}
