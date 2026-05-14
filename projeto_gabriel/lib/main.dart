@@ -5,11 +5,11 @@ void main() {
 }
 
 class Custo {
-  String descriacao;
+  String descricao;
   double valor;
 
   Custo({
-    required this.descriacao,
+    required this.descricao,
     required this.valor,
   });
 }
@@ -35,11 +35,11 @@ class MyHomePage extends StatefulWidget {
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
-} 
+}
 
-class _HomePageState extends State<HomePage> {
-
+class _MyHomePageState extends State<MyHomePage> {
   List<Custo> transactions = [];
+
 
  double get total {
     double total = 0;
@@ -125,10 +125,10 @@ class _HomePageState extends State<HomePage> {
                             ),
 
                             title:
-                                Text(transaction.title),
+                                Text(transaction.descricao),
 
                             trailing: Text(
-                              "R\$ ${transaction.value.toStringAsFixed(2)}",
+                              "R\$ ${transaction.valor.toStringAsFixed(2)}",
                             ),
                           ),
                         );
@@ -138,5 +138,25 @@ class _HomePageState extends State<HomePage> {
           ]
         )
       )
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.green,
+
+        child: const Icon(Icons.add),
+
+        onPressed: () async {
+
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const AddPage(),
+            ),
+          );
+
+          if (result != null) {
+            addTransaction(result);
+          }
+        },
+      ),
     );
-  }}
+  }
+}
