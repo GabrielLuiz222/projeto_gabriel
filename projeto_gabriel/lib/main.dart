@@ -137,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           ]
         )
-      )
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.green,
 
@@ -160,3 +160,81 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+  class AddPage extends StatefulWidget {
+  const AddPage({super.key}); 
+
+ @override
+  State<AddPage> createState() => _AddPage();
+  }
+  class _AddPage extends State<AddPage> {
+    final descricaoController = TextEditingController();
+    final valorController = TextEditingController();
+
+    void save() {
+      if (descricaoController.text.isEmpty || 
+          valorController.text.isEmpty) {
+            return;
+          }
+          final transaction = Custo(
+            descricao: descricaoController.text,
+            valor: double.parse(valorController.text),
+          );
+          Navigator.pop(context, transaction);
+    }
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text("Adicionar Gasto"),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+
+          child: Column(
+            children: [
+
+              TextField(
+                controller: descricaoController,
+
+                decoration: InputDecoration(
+                  labelText: "Descrição",
+
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  )
+                ),
+              ),
+              const SizedBox(height: 15),
+
+              TextField(
+                controller: valorController,
+
+                keyboardType: TextInputType.number,
+
+                decoration:  InputDecoration(
+                  labelText: "Valor",
+
+                  border:  OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  )
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              SizedBox(
+                width: double.infinity,
+
+                child: ElevatedButton(
+                  onPressed: save,
+
+                  child: const Text("Salvar"),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+    
