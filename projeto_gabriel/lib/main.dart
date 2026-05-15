@@ -123,13 +123,37 @@ class _MyHomePageState extends State<MyHomePage> {
                               Icons.attach_money,
                               color: Colors.green,
                             ),
-
+          
                             title:
                                 Text(transaction.descricao),
 
-                            trailing: Text(
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+
+                            Text(
                               "R\$ ${transaction.valor.toStringAsFixed(2)}",
                             ),
+                            
+                            const SizedBox(width: 8),
+
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                setState(() {
+                                  transactions.removeAt(index);
+                                });
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Gasto removido"),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              },
+                            ),
+                                  ],
+                                ),
                           ),
                         );
                       }
@@ -175,9 +199,23 @@ class _MyHomePageState extends State<MyHomePage> {
           valorController.text.isEmpty) {
             return;
           }
+          
+          double? valor = double.tryParse(valorController.text.replaceAll(',', '.'),
+          );
+
+          if (valor == null || valor <= 0) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Digite um valor maior que zero"),
+                duration: Duration(seconds: 2),
+              ),
+            );
+            return;
+          }
+
           final transaction = Custo(
             descricao: descricaoController.text,
-            valor: double.parse(valorController.text),
+            valor: valor,
           );
           Navigator.pop(context, transaction);
     }
