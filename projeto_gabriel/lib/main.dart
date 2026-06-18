@@ -7,10 +7,12 @@ void main() {
 class Custo {
   String descricao;
   double valor;
+  String categoria;
 
   Custo({
     required this.descricao,
     required this.valor,
+    required this.categoria,  
   });
 }
 
@@ -112,28 +114,41 @@ class _MyHomePageState extends State<MyHomePage> {
                     )
                   : ListView.builder(
                       itemCount: transactions.length,
+
                       itemBuilder: (context, index) {
+                        final transaction = transactions[index];
 
-                        final transaction =
-                            transactions[index];
+                        return AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
 
-                        return Card(
-                          child: ListTile(
-                            leading: const Icon(
-                              Icons.attach_money,
-                              color: Colors.green,
-                            ),
-          
-                            title:
-                                Text(transaction.descricao),
+                          child: Card(
+                            elevation: 4,
+                            margin: const EdgeInsets.only(bottom: 12),
 
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
+                            child: ListTile(
 
-                            Text(
-                              "R\$ ${transaction.valor.toStringAsFixed(2)}",
-                            ),
+                              title: Text(
+                                transaction.descricao,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+
+                              subtitle: Text(
+                                "Categoria: ${transaction.categoria}",
+                              ),
+
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+
+                                  Text(
+                                    "R\$ ${transaction.valor.toStringAsFixed(2)}",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+
                             
                             const SizedBox(width: 8),
 
@@ -148,24 +163,27 @@ class _MyHomePageState extends State<MyHomePage> {
                                   const SnackBar(
                                     content: Text("Gasto removido"),
                                     duration: Duration(seconds: 2),
+                                   ),
+                                      );
+                                    },
                                   ),
-                                );
-                              },
+                                ],
+                              ),
                             ),
-                                  ],
-                                ),
                           ),
                         );
-                      }
-                    )
-            )
-          ]
-        )
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
+
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.green,
 
         child: const Icon(Icons.add),
+
 
         onPressed: () async {
 
@@ -194,6 +212,16 @@ class _MyHomePageState extends State<MyHomePage> {
     final descricaoController = TextEditingController();
     final valorController = TextEditingController();
 
+    String categoriaSelecionada = "Alimentação";
+
+  final List<String> categorias = [
+    "Alimentação",
+    "Transporte",
+    "Roupas",
+    "Saúde",
+    "Pet",
+  ];
+
     void save() {
       if (descricaoController.text.isEmpty || 
           valorController.text.isEmpty) {
@@ -216,6 +244,7 @@ class _MyHomePageState extends State<MyHomePage> {
           final transaction = Custo(
             descricao: descricaoController.text,
             valor: valor,
+            categoria: categoriaSelecionada,
           );
           Navigator.pop(context, transaction);
     }
@@ -257,6 +286,34 @@ class _MyHomePageState extends State<MyHomePage> {
                   )
                 ),
               ),
+
+              const SizedBox(height: 15),
+
+            DropdownButtonFormField<String>(
+              value: categoriaSelecionada,
+
+              decoration: InputDecoration(
+                labelText: "Categoria",
+
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+
+              items: categorias.map((categoria) {
+                return DropdownMenuItem(
+                  value: categoria,
+                  child: Text(categoria),
+                );
+              }).toList(),
+
+              onChanged: (value) {
+                setState(() {
+                  categoriaSelecionada = value!;
+                });
+              },
+            ),
+
 
               const SizedBox(height: 20),
 
