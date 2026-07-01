@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'estatisticas_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -63,6 +64,22 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text("Controle Financeiro"),
         centerTitle: true,
+
+        actions: [
+  IconButton(
+    icon: const Icon(Icons.bar_chart),
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => EstatisticasPage(
+            transactions: transactions,
+          ),
+        ),
+      );
+    },
+  ),
+],
       ),
 
       body: Padding(
