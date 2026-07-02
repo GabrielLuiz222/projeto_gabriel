@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'estatisticas_page.dart';
+import 'limite_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -73,6 +74,20 @@ class _MyHomePageState extends State<MyHomePage> {
         context,
         MaterialPageRoute(
           builder: (_) => EstatisticasPage(
+            transactions: transactions,
+          ),
+        ),
+      );
+    },
+  ),
+
+  IconButton(
+    icon: const Icon(Icons.savings),
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => MetaPage(
             transactions: transactions,
           ),
         ),
