@@ -16,6 +16,7 @@ class _MetaPageState extends State<MetaPage> {
   );
 
   double meta = 1000;
+  bool animar = false;
 
   double get total {
     double soma = 0;
@@ -53,6 +54,14 @@ class _MetaPageState extends State<MetaPage> {
     if (valor != null && valor > 0) {
       setState(() {
         meta = valor;
+        animar = true;
+      });
+      Future.delayed(const Duration(milliseconds: 300), () {
+        if (mounted) {
+          setState(() {
+            animar = false;
+          });
+        }
       });
     }
   }
@@ -62,39 +71,44 @@ class _MetaPageState extends State<MetaPage> {
     bool ultrapassou = total > meta;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Meta Financeira"), centerTitle: true),
+      appBar: AppBar(title: const Text("Limite Financeiro"), centerTitle: true),
 
       body: Padding(
         padding: const EdgeInsets.all(16),
 
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(15),
-              ),
+            AnimatedScale(
+              scale: animar ? 1.08 : 1.0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(15),
+                ),
 
-              child: Column(
-                children: [
-                  const Text(
-                    "Meta do Mês",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  Text(
-                    "R\$ ${meta.toStringAsFixed(2)}",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
+                child: Column(
+                  children: [
+                    const Text(
+                      "Limite do Mês",
+                      style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
-                  ),
-                ],
+
+                    const SizedBox(height: 10),
+
+                    Text(
+                      "R\$ ${meta.toStringAsFixed(2)}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
 
@@ -104,7 +118,7 @@ class _MetaPageState extends State<MetaPage> {
               controller: metaController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                labelText: "Alterar Meta",
+                labelText: "Alterar Limite",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -117,7 +131,7 @@ class _MetaPageState extends State<MetaPage> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: atualizarMeta,
-                child: const Text("Salvar Meta"),
+                child: const Text("Salvar Limite"),
               ),
             ),
 
@@ -182,7 +196,7 @@ class _MetaPageState extends State<MetaPage> {
                 ),
                 child: ListTile(
                   leading: const Icon(Icons.warning, color: Colors.red),
-                  title: const Text("Meta ultrapassada"),
+                  title: const Text("Limite ultrapassado"),
                   subtitle: Text(
                     "Você excedeu R\$ ${excedente.toStringAsFixed(2)}",
                   ),
