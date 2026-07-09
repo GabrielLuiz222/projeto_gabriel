@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
 
-class MetaPage extends StatefulWidget {
+class LimitePage extends StatefulWidget {
   final List<Custo> transactions;
 
-  const MetaPage({super.key, required this.transactions});
+  const LimitePage({super.key, required this.transactions});
 
   @override
-  State<MetaPage> createState() => _MetaPageState();
+  State<LimitePage> createState() => _LimitePageState();
 }
 
-class _MetaPageState extends State<MetaPage> {
-  final TextEditingController metaController = TextEditingController(
+class _LimitePageState extends State<LimitePage> {
+  final TextEditingController limiteController = TextEditingController(
     text: "1000",
   );
 
-  double meta = 1000;
+  double limite = 1000;
   bool animar = false;
+
+//CALCULOS DO CÓDIGO
 
   double get total {
     double soma = 0;
@@ -27,19 +29,19 @@ class _MetaPageState extends State<MetaPage> {
   }
 
   double get restante {
-    double valor = meta - total;
+    double valor = limite - total;
     return valor < 0 ? 0 : valor;
   }
 
   double get excedente {
-    if (total <= meta) return 0;
-    return total - meta;
+    if (total <= limite) return 0;
+    return total - limite;
   }
 
   double get porcentagem {
-    if (meta == 0) return 0;
+    if (limite == 0) return 0;
 
-    double p = total / meta;
+    double p = total / limite;
 
     if (p > 1) {
       p = 1;
@@ -48,12 +50,13 @@ class _MetaPageState extends State<MetaPage> {
     return p;
   }
 
-  void atualizarMeta() {
-    double? valor = double.tryParse(metaController.text.replaceAll(",", "."));
+//FUNÇÃO PARA ATUALIZAR O LIMITE
+  void atualizarLimite() {
+    double? valor = double.tryParse(limiteController.text.replaceAll(",", "."));
 
     if (valor != null && valor > 0) {
       setState(() {
-        meta = valor;
+        limite = valor;
         animar = true;
       });
       Future.delayed(const Duration(milliseconds: 300), () {
@@ -68,7 +71,7 @@ class _MetaPageState extends State<MetaPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool ultrapassou = total > meta;
+    bool ultrapassou = total > limite;
 
     return Scaffold(
       appBar: AppBar(title: const Text("Limite Financeiro"), centerTitle: true),
@@ -78,6 +81,7 @@ class _MetaPageState extends State<MetaPage> {
 
         child: Column(
           children: [
+            //ANIMAÇÃO DO CARD DO LIMITE
             AnimatedScale(
               scale: animar ? 1.08 : 1.0,
               duration: const Duration(milliseconds: 300),
@@ -99,8 +103,9 @@ class _MetaPageState extends State<MetaPage> {
 
                     const SizedBox(height: 10),
 
+                    //TEXTO DO LIMITE
                     Text(
-                      "R\$ ${meta.toStringAsFixed(2)}",
+                      "R\$ ${limite.toStringAsFixed(2)}",
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 32,
@@ -114,8 +119,9 @@ class _MetaPageState extends State<MetaPage> {
 
             const SizedBox(height: 25),
 
+            //CAMPO DE TEXTO PARA ALTERAR O LIMITE
             TextField(
-              controller: metaController,
+              controller: limiteController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: "Alterar Limite",
@@ -127,16 +133,18 @@ class _MetaPageState extends State<MetaPage> {
 
             const SizedBox(height: 15),
 
+            //BOTÃO DE SALVAR O LIMITE
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: atualizarMeta,
+                onPressed: atualizarLimite,
                 child: const Text("Salvar Limite"),
               ),
             ),
 
             const SizedBox(height: 30),
 
+            //TEXTO DO VALOR GASTO
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -150,6 +158,7 @@ class _MetaPageState extends State<MetaPage> {
 
             const SizedBox(height: 20),
 
+             //PROGRESS BAR DO LIMITE
             LinearProgressIndicator(
               value: porcentagem,
               minHeight: 14,
@@ -160,6 +169,7 @@ class _MetaPageState extends State<MetaPage> {
 
             const SizedBox(height: 8),
 
+
             Text(
               "${(porcentagem * 100).toStringAsFixed(0)}%",
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -167,6 +177,7 @@ class _MetaPageState extends State<MetaPage> {
 
             const SizedBox(height: 30),
 
+            //CARD DO VALOR RESTANTE
             Card(
               elevation: 4,
               shape: RoundedRectangleBorder(
@@ -187,6 +198,7 @@ class _MetaPageState extends State<MetaPage> {
 
             const SizedBox(height: 15),
 
+            //CARD DO LIMITE ULTRAPASSADO
             if (ultrapassou)
               Card(
                 color: Colors.red.shade100,

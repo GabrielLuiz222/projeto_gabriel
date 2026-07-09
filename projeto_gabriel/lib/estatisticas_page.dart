@@ -6,6 +6,7 @@ class EstatisticasPage extends StatelessWidget {
 
   const EstatisticasPage({super.key, required this.transactions});
 
+//CALCULOS DO CÓDIGO
   double get total {
     double soma = 0;
     for (var gasto in transactions) {
@@ -49,6 +50,7 @@ class EstatisticasPage extends StatelessWidget {
 
   int get quantidade => transactions.length;
 
+//FUNÇÃO PARA CRIAR O CARD DO VALOR
   Widget cardValor(String titulo, double valor, IconData icone) {
     return Card(
       elevation: 4,
@@ -74,6 +76,7 @@ class EstatisticasPage extends StatelessWidget {
     );
   }
 
+//FUNÇÃO PARA CRIAR O CARD DA QUANTIDADE DE GASTOS
   Widget cardQuantidade() {
     return Card(
       elevation: 4,
@@ -99,6 +102,7 @@ class EstatisticasPage extends StatelessWidget {
     );
   }
 
+//FUNÇÃO PARA CRIAR A TELA DE ESTATÍSTICAS
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,6 +127,7 @@ class EstatisticasPage extends StatelessWidget {
 
                   const SizedBox(height: 10),
 
+                  //ANIMAÇÃO DO CARD DO VALOR TOTAL
                   TweenAnimationBuilder<double>(
                     tween: Tween(begin: 0, end: total),
                     duration: const Duration(seconds: 2),
