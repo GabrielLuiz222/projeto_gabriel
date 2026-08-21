@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'models/custo.dart';
+
 
 class EstatisticasPage extends StatelessWidget {
   final List<Custo> transactions;

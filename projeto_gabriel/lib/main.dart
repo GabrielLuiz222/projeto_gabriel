@@ -1,21 +1,12 @@
 import 'package:flutter/material.dart';
+
+import 'models/custo.dart';
 import 'estatisticas_page.dart';
 import 'limite_page.dart';
+import 'database/database_helper.dart';
 
 void main() {
   runApp(const MyApp());
-}
-
-class Custo {
-  String descricao;
-  double valor;
-  String categoria;
-
-  Custo({
-    required this.descricao,
-    required this.valor,
-    required this.categoria,
-  });
 }
 
 class MyApp extends StatelessWidget {
@@ -42,6 +33,21 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Custo> transactions = [];
 
+  @override
+  void initState() {
+    super.initState();
+
+    carregarGastos();
+  }
+
+  Future<void> carregarGastos() async {
+    final gastos = await DatabaseHelper.instance.buscarGastos();
+
+    setState(() {
+      transactions = gastos;
+    });
+  }
+
   double get total {
     double total = 0;
 
@@ -51,10 +57,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return total;
   }
 
-  void addTransaction(Custo custo) {
-    setState(() {
-      transactions.add(custo);
-    });
+  Future<void> addTransaction(Custo custo) async {
+    await DatabaseHelper.instance.inserirGasto(custo);
+
+    await carregarGastos();
   }
 
   @override
@@ -147,6 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             margin: const EdgeInsets.only(bottom: 12),
 
                             child: ListTile(
+                              // EDITAR GASTO
                               onTap: () async {
                                 final result = await Navigator.push(
                                   context,
@@ -156,9 +163,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                 );
 
                                 if (result != null) {
-                                  setState(() {
-                                    transactions[index] = result;
-                                  });
+                                  await DatabaseHelper.instance.atualizarGasto(
+                                    result,
+                                  );
+
+                                  await carregarGastos();
 
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
@@ -194,15 +203,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                   const SizedBox(width: 8),
 
+                                  // EXCLUIR GASTO
                                   IconButton(
                                     icon: const Icon(
                                       Icons.delete,
                                       color: Colors.red,
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        transactions.removeAt(index);
-                                      });
+                                    onPressed: () async {
+                                      await DatabaseHelper.instance
+                                          .deletarGasto(transaction.id!);
+
+                                      await carregarGastos();
 
                                       ScaffoldMessenger.of(
                                         context,
@@ -298,6 +309,7 @@ class _AddPage extends State<AddPage> {
     }
 
     final transaction = Custo(
+      id: widget.custo?.id,
       descricao: descricaoController.text,
       valor: valor,
       categoria: categoriaSelecionada,
