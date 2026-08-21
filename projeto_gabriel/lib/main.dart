@@ -14,7 +14,7 @@ class Custo {
   Custo({
     required this.descricao,
     required this.valor,
-    required this.categoria,  
+    required this.categoria,
   });
 }
 
@@ -26,9 +26,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Controle de Gastos',
-      theme: ThemeData(
-        primarySwatch: Colors.green
-      ),
+      theme: ThemeData(primarySwatch: Colors.green),
       home: const MyHomePage(),
     );
   }
@@ -44,8 +42,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Custo> transactions = [];
 
-
- double get total {
+  double get total {
     double total = 0;
 
     for (var custo in transactions) {
@@ -54,9 +51,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return total;
   }
 
-  void addTransaction(Custo custo) { 
-    setState(() { 
-      transactions.add(custo); });
+  void addTransaction(Custo custo) {
+    setState(() {
+      transactions.add(custo);
+    });
   }
 
   @override
@@ -67,41 +65,36 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
 
         actions: [
-  IconButton(
-    icon: const Icon(Icons.bar_chart),
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => EstatisticasPage(
-            transactions: transactions,
+          IconButton(
+            icon: const Icon(Icons.bar_chart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => EstatisticasPage(transactions: transactions),
+                ),
+              );
+            },
           ),
-        ),
-      );
-    },
-  ),
 
-  IconButton(
-    icon: const Icon(Icons.savings),
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => LimitePage(
-            transactions: transactions,
+          IconButton(
+            icon: const Icon(Icons.savings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => LimitePage(transactions: transactions),
+                ),
+              );
+            },
           ),
-        ),
-      );
-    },
-  ),
-],
+        ],
       ),
 
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -111,13 +104,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               child: Column(
                 children: [
-
                   const Text(
                     "Total de Gastos",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
+                    style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
 
                   const SizedBox(height: 10),
@@ -158,6 +147,29 @@ class _MyHomePageState extends State<MyHomePage> {
                             margin: const EdgeInsets.only(bottom: 12),
 
                             child: ListTile(
+                              onTap: () async {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => AddPage(custo: transaction),
+                                  ),
+                                );
+
+                                if (result != null) {
+                                  setState(() {
+                                    transactions[index] = result;
+                                  });
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        "Gasto alterado com sucesso",
+                                      ),
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
+                              },
 
                               title: Text(
                                 transaction.descricao,
@@ -173,7 +185,6 @@ class _MyHomePageState extends State<MyHomePage> {
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-
                                   Text(
                                     "R\$ ${transaction.valor.toStringAsFixed(2)}",
                                     style: const TextStyle(
@@ -181,21 +192,25 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
                                   ),
 
-                            
-                            const SizedBox(width: 8),
+                                  const SizedBox(width: 8),
 
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () {
-                                setState(() {
-                                  transactions.removeAt(index);
-                                });
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        transactions.removeAt(index);
+                                      });
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Gasto removido"),
-                                    duration: Duration(seconds: 2),
-                                   ),
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text("Gasto removido"),
+                                          duration: Duration(seconds: 2),
+                                        ),
                                       );
                                     },
                                   ),
@@ -216,14 +231,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
         child: const Icon(Icons.add),
 
-
         onPressed: () async {
-
           final result = await Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (_) => const AddPage(),
-            ),
+            MaterialPageRoute(builder: (_) => const AddPage()),
           );
 
           if (result != null) {
@@ -234,17 +245,21 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-  class AddPage extends StatefulWidget {
-  const AddPage({super.key}); 
 
- @override
+class AddPage extends StatefulWidget {
+  final Custo? custo;
+
+  const AddPage({super.key, this.custo});
+
+  @override
   State<AddPage> createState() => _AddPage();
-  }
-  class _AddPage extends State<AddPage> {
-    final descricaoController = TextEditingController();
-    final valorController = TextEditingController();
+}
 
-    String categoriaSelecionada = "Alimentação";
+class _AddPage extends State<AddPage> {
+  final descricaoController = TextEditingController();
+  final valorController = TextEditingController();
+
+  String categoriaSelecionada = "Alimentação";
 
   final List<String> categorias = [
     "Alimentação",
@@ -254,72 +269,84 @@ class _MyHomePageState extends State<MyHomePage> {
     "Pet",
   ];
 
-    void save() {
-      if (descricaoController.text.isEmpty || 
-          valorController.text.isEmpty) {
-            return;
-          }
-          
-          double? valor = double.tryParse(valorController.text.replaceAll(',', '.'),
-          );
+  @override
+  void initState() {
+    super.initState();
 
-          if (valor == null || valor <= 0) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Digite um valor maior que zero"),
-                duration: Duration(seconds: 2),
-              ),
-            );
-            return;
-          }
-
-          final transaction = Custo(
-            descricao: descricaoController.text,
-            valor: valor,
-            categoria: categoriaSelecionada,
-          );
-          Navigator.pop(context, transaction);
+    if (widget.custo != null) {
+      descricaoController.text = widget.custo!.descricao;
+      valorController.text = widget.custo!.valor.toString();
+      categoriaSelecionada = widget.custo!.categoria;
     }
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text("Adicionar Gasto"),
+  }
+
+  void save() {
+    if (descricaoController.text.isEmpty || valorController.text.isEmpty) {
+      return;
+    }
+
+    double? valor = double.tryParse(valorController.text.replaceAll(',', '.'));
+
+    if (valor == null || valor <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Digite um valor maior que zero"),
+          duration: Duration(seconds: 2),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
+      );
+      return;
+    }
 
-          child: Column(
-            children: [
+    final transaction = Custo(
+      descricao: descricaoController.text,
+      valor: valor,
+      categoria: categoriaSelecionada,
+    );
 
-              TextField(
-                controller: descricaoController,
+    Navigator.pop(context, transaction);
+  }
 
-                decoration: InputDecoration(
-                  labelText: "Descrição",
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.custo == null ? "Adicionar Gasto" : "Editar Gasto"),
+      ),
 
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  )
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+
+        child: Column(
+          children: [
+            TextField(
+              controller: descricaoController,
+
+              decoration: InputDecoration(
+                labelText: "Descrição",
+
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              const SizedBox(height: 15),
+            ),
 
-              TextField(
-                controller: valorController,
+            const SizedBox(height: 15),
 
-                keyboardType: TextInputType.number,
+            TextField(
+              controller: valorController,
 
-                decoration:  InputDecoration(
-                  labelText: "Valor",
+              keyboardType: TextInputType.number,
 
-                  border:  OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  )
+              decoration: InputDecoration(
+                labelText: "Valor",
+
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
+            ),
 
-              const SizedBox(height: 15),
+            const SizedBox(height: 15),
 
             DropdownButtonFormField<String>(
               value: categoriaSelecionada,
@@ -346,16 +373,17 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
 
+            const SizedBox(height: 20),
 
-              const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
 
-              SizedBox(
-                width: double.infinity,
+              child: ElevatedButton(
+                onPressed: save,
 
-                child: ElevatedButton(
-                  onPressed: save,
-
-                  child: const Text("Salvar"),
+                child: Text(
+                  widget.custo == null ? "Salvar" : "Salvar Alterações",
+                ),
               ),
             ),
           ],
@@ -364,4 +392,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-    
