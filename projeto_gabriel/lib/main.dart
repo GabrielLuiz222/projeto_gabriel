@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'splash_screen.dart';
 import 'models/custo.dart';
 import 'estatisticas_page.dart';
 import 'limite_page.dart';
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Controle de Gastos',
       theme: ThemeData(primarySwatch: Colors.green),
-      home: const MyHomePage(),
+      home: const SplashScreen(),
     );
   }
 }
