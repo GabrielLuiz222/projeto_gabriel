@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_gabriel/cotacoes_page.dart';
 import 'splash_screen.dart';
 import 'models/custo.dart';
 import 'estatisticas_page.dart';
@@ -90,6 +91,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 context,
                 MaterialPageRoute(
                   builder: (_) => LimitePage(transactions: transactions),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.currency_exchange),
+            tooltip: 'Cotações',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const CotacoesPage(),
                 ),
               );
             },
